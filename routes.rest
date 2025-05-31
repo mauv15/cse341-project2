@@ -41,4 +41,4 @@ Content-Type: application/json
 
 
 ### delete movie by id
-DELETE http://localhost:3001/movies/:id HTTP/1.1
+DELETE http://localhost:3001/movies/683b682bef5bae450f4eace1 HTTP/1.1

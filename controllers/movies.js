@@ -95,8 +95,9 @@ const updateMovie = async (req, res) => {
 
 const deleteMovie = async (req, res) => {
     // #swagger.tags=['movies']
+    let movieId;
     try{
-        const movieId = new ObjectId(req.params.id);
+        movieId = new ObjectId(req.params.id);
     } catch (err) {
         return res.status(400).json({ error: 'Invalid ID format' });
     }
