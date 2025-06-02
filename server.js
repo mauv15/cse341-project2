@@ -1,7 +1,11 @@
 const express = require('express');
 const mongodb = require('./data/database');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const session = require('express-session');
 const cors = require('cors');
 require('dotenv').config();
+const GitHubStrategy = require('passport-github2').Strategy;
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger.json');
@@ -15,6 +19,7 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use('/movies', require('./routes/movies'));
+app.use('/directors', require('./routes/directors'));
 app.use('/', require('./routes'));
 
 mongodb.initDb((err) => {
