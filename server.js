@@ -32,7 +32,7 @@ app.use(passport.session());
 
 // ✅ Clean and correct CORS config
 app.use(cors({
-    origin: 'http://localhost:3001', // Adjust if your frontend runs elsewhere
+    origin: 'https://cse341-project2-jxd1.onrender.com', // Adjust if your frontend runs elsewhere
     credentials: true,
     methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
     allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization'
@@ -42,7 +42,7 @@ app.use(cors({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.GITHUB_CALLBACK_URL || 'http://localhost:3001/github/callback'
+    callbackURL: process.env.GITHUB_CALLBACK_URL || 'https://cse341-project2-jxd1.onrender.com/github/callback'
 },
 function(accessToken, refreshToken, profile, done) {
     console.log('GitHub profile:', profile);
