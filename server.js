@@ -3,6 +3,7 @@ const mongodb = require('./data/database');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 require('dotenv').config();
 const GitHubStrategy = require('passport-github2').Strategy;
@@ -14,6 +15,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app
+    .use(cookieParser())
     .use(bodyParser.json())
     .use(session({
         secret: 'secret',
@@ -38,7 +40,10 @@ app
     })
 
     .use(cors({ methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'] }))
-    .use(cors({ origin: '*' }))
+    .use(cors({
+        origin: 'http://localhost:3000', // or wherever your frontend is running
+        credentials: true
+    }))
     .use('/', require('./routes/index.js'))
     .use('/movies', require('./routes/movies'))
     .use('/directors', require('./routes/directors'));
