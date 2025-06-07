@@ -63,11 +63,13 @@ passport.deserializeUser((user, done) => {
 
 app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
-    return res.json({ message: `logged in as ${req.user.displayName}`, user: req.user });
+    const name = req.user.displayName || req.user.username || 'Unknown';
+    return res.send(`Logged in as ${name}`);
   } else {
     return res.send('Logged Out');
   }
 });
+
 
 
 app.get('/github/callback', passport.authenticate('github', {
