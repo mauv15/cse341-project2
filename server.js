@@ -73,10 +73,10 @@ app.get('/', (req, res) => {
 
 
 app.get('/github/callback', passport.authenticate('github', {
-    failureRedirect: '/api-docs'}),
-    (req, res) => {
-        res.redirect('/');
-    });
+    failureRedirect: '/api-docs'
+}), (req, res) => {
+    res.redirect('/');
+});
 
 mongodb.initDb((err) => {
     if (err) {
