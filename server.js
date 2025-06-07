@@ -23,7 +23,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false // Only use true if on HTTPS
+        secure: true // Only use true if on HTTPS
     }
 }));
 
@@ -32,7 +32,7 @@ app.use(passport.session());
 
 // ✅ Clean and correct CORS config
 app.use(cors({
-    origin: 'https://cse341-project2-jxd1.onrender.com', // Adjust if your frontend runs elsewhere
+    origin: 'http://localhost:3001', // Adjust if your frontend runs elsewhere
     credentials: true,
     methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
     allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization'

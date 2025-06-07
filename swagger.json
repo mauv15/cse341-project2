@@ -11,6 +11,13 @@
     "http",
     "https"
   ],
+  "securityDefinitions": {
+  "cookieAuth": {
+    "type": "apiKey",
+    "in": "cookie",
+    "name": "connect.sid"
+  }
+  },
   "paths": {
     "/movies/": {
       "get": {

@@ -5,7 +5,7 @@ const doc = {
         title: 'Movies API',
         description: 'Movies API Documentation',
     },
-    host: 'https://localhost3001',
+    host: 'https://cse341-project2-jxd1.onrender.com',
     schemes: ['http', 'https']
 };
 
