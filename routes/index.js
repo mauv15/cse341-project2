@@ -17,17 +17,3 @@ router.get('/logout', function (req, res, next) {
 module.exports = router;
 
 
-// router.get('/',(req, res) => {
-//     //#swagger.tags=['Wellcomer to the Movies API']
-//     res.send('Wellcome to the Movies API');
-// });
-
-// app.use(cors());
-// app.use(express.json());
-
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
-// app.use('/movies', require('./routes/movies'));
-// app.use('/directors', require('./routes/directors'));
-// app.use('/', require('./routes'));
-

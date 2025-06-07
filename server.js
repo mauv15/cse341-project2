@@ -18,11 +18,10 @@ app
     .use(session({
         secret: 'secret',
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: false
     }))
 
     .use(passport.initialize())
-
     .use(passport.session())
 
     .use((req, res, next) => {
@@ -50,7 +49,9 @@ app
         callbackURL: process.env.GITHUB_CALLBACK_URL || 'http://localhost:3001/github/callback'
     },
     function(accessToken, refreshToken, profile, done) {
-        return done(null, profile);
+      //  User.findOrCreate({ githubId: profile.id }, function (err, user) {
+            return done(null, profile);
+//});
     }
 ));
 
@@ -61,23 +62,19 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-app.get('/', (req, res) => {res.send(req.session.user !==undefined ? `logged in as ${req.session.user.displayName}` : 'Logged Out')});
+app.get('/', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.send(`logged in as ${req.user.displayName}`);
+  } else {
+    res.send('Logged Out');
+  }
+});
 
 app.get('/github/callback', passport.authenticate('github', {
-    failureRedirect: '/api-docs', session: false}),
+    failureRedirect: '/api-docs'}),
     (req, res) => {
-        req.session.user = req.user;
         res.redirect('/');
     });
-
-// app.use(cors());
-// app.use(express.json());
-
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
-// app.use('/movies', require('./routes/movies'));
-// app.use('/directors', require('./routes/directors'));
-// app.use('/', require('./routes'));
 
 mongodb.initDb((err) => {
     if (err) {
