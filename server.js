@@ -7,47 +7,45 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 require('dotenv').config();
 const GitHubStrategy = require('passport-github2').Strategy;
+
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger.json');
 
 const app = express();
 const port = process.env.PORT || 3001;
 
-// ---------------------- Middleware ----------------------
-app.use(cookieParser());
-app.use(bodyParser.json());
+app
+    .use(cookieParser())
+    .use(bodyParser.json())
+    .use(session({
+        secret: 'secret',
+        resave: false,
+        saveUninitialized: false
+    }))
 
-// ✅ Use session with secure: false (for local dev)
-app.use(session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: true // Only use true if on HTTPS
-    }
-}));
+    .use(passport.initialize())
+    .use(passport.session())
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-// ✅ Clean and correct CORS config
-app.use(cors({
-    origin: 'http://localhost:3001', // Adjust if your frontend runs elsewhere
+    .use(cors({
+    origin: 'http://localhost:3001', // where Swagger UI or frontend runs
     credentials: true,
     methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
     allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization'
-}));
+}))
+    .use('/', require('./routes/index.js'))
+    .use('/movies', require('./routes/movies'))
+    .use('/directors', require('./routes/directors'));
 
-// ---------------------- GitHub Auth ----------------------
-passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.GITHUB_CALLBACK_URL || 'https://cse341-project2-jxd1.onrender.com/github/callback'
-},
-function(accessToken, refreshToken, profile, done) {
-    console.log('GitHub profile:', profile);
-    return done(null, profile);
-}));
+    passport.use(new GitHubStrategy({
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: process.env.GITHUB_CALLBACK_URL || 'http://localhost:3001/github/callback'
+    },
+    function(accessToken, refreshToken, profile, done) {
+        console.log('GitHub profile:', profile);
+        return done(null, profile);
+    }
+));
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -56,15 +54,16 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-// ---------------------- Routes ----------------------
 app.get('/', (req, res) => {
-    if (req.isAuthenticated()) {
-        const name = req.user.displayName || req.user.username || 'Unknown';
-        return res.send(`Logged in as ${name}`);
-    } else {
-        return res.send('Logged Out');
-    }
+  if (req.isAuthenticated()) {
+    const name = req.user.displayName || req.user.username || 'Unknown';
+    return res.send(`Logged in as ${name}`);
+  } else {
+    return res.send('Logged Out');
+  }
 });
+
+
 
 app.get('/github/callback', passport.authenticate('github', {
     failureRedirect: '/api-docs'
@@ -72,19 +71,6 @@ app.get('/github/callback', passport.authenticate('github', {
     res.redirect('/');
 });
 
-// ✅ Swagger docs (with credentials enabled)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
-    swaggerOptions: {
-        withCredentials: true
-    }
-}));
-
-// ✅ Your API routes (ensure these check req.isAuthenticated())
-app.use('/', require('./routes/index.js'));
-app.use('/movies', require('./routes/movies'));
-app.use('/directors', require('./routes/directors'));
-
-// ---------------------- Mongo Init ----------------------
 mongodb.initDb((err) => {
     if (err) {
         console.error(err);
