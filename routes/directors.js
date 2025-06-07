@@ -12,12 +12,21 @@ router.get('/', directorsController.getAll);
 router.get('/:id', directorsController.getSingle);
 
 // POST /directors – Create new director
-router.post('/', isAuthenticated, directorsController.createdirector);
+router.post('/', directorsController.createdirector);
 
 // PUT /directors/:id – Update director
-router.put('/:id', isAuthenticated, directorsController.updatedirector);
+router.put('/:id', directorsController.updatedirector);
 
 // DELETE /directors/:id – Delete director
-router.delete('/:id', isAuthenticated, directorsController.deletedirector);
+router.delete('/:id', directorsController.deletedirector);
+
+// // POST /directors – Create new director
+// router.post('/', isAuthenticated, directorsController.createdirector);
+
+// // PUT /directors/:id – Update director
+// router.put('/:id', isAuthenticated, directorsController.updatedirector);
+
+// // DELETE /directors/:id – Delete director
+// router.delete('/:id', isAuthenticated, directorsController.deletedirector);
 
 module.exports = router;
