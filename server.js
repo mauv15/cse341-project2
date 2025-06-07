@@ -41,7 +41,7 @@ app
 
     .use(cors({ methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'] }))
     .use(cors({
-        origin: 'http://localhost:3000', // or wherever your frontend is running
+        origin: 'http://localhost:3001', // or wherever your frontend is running
         credentials: true
     }))
     .use('/', require('./routes/index.js'))
