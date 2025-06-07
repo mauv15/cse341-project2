@@ -49,9 +49,8 @@ app
         callbackURL: process.env.GITHUB_CALLBACK_URL || 'http://localhost:3001/github/callback'
     },
     function(accessToken, refreshToken, profile, done) {
-      //  User.findOrCreate({ githubId: profile.id }, function (err, user) {
-            return done(null, profile);
-//});
+        console.log('GitHub profile:', profile);
+        return done(null, profile);
     }
 ));
 
@@ -64,11 +63,12 @@ passport.deserializeUser((user, done) => {
 
 app.get('/', (req, res) => {
   if (req.isAuthenticated()) {
-    res.send(`logged in as ${req.user.displayName}`);
+    return res.json({ message: `logged in as ${req.user.displayName}`, user: req.user });
   } else {
-    res.send('Logged Out');
+    return res.send('Logged Out');
   }
 });
+
 
 app.get('/github/callback', passport.authenticate('github', {
     failureRedirect: '/api-docs'}),

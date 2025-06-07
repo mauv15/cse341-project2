@@ -12,21 +12,12 @@ router.get('/', moviesController.getAll);
 router.get('/:id', moviesController.getSingle);
 
 // POST /movies – Create new movie
-router.post('/', moviesController.createMovie);
+router.post('/', isAuthenticated, moviesController.createMovie);
 
 // PUT /movies/:id – Update movie
-router.put('/:id', moviesController.updateMovie);
+router.put('/:id', isAuthenticated, moviesController.updateMovie);
 
 // DELETE /movies/:id – Delete movie
-router.delete('/:id', moviesController.deleteMovie);
-
-// // POST /movies – Create new movie
-// router.post('/', isAuthenticated, moviesController.createMovie);
-
-// // PUT /movies/:id – Update movie
-// router.put('/:id', isAuthenticated, moviesController.updateMovie);
-
-// // DELETE /movies/:id – Delete movie
-// router.delete('/:id', isAuthenticated, moviesController.deleteMovie);
+router.delete('/:id', isAuthenticated, moviesController.deleteMovie);
 
 module.exports = router;
