@@ -11,6 +11,9 @@ const GitHubStrategy = require('passport-github2').Strategy;
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger.json');
 
+const swagger = require('./swaggerConfig');
+
+
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -27,14 +30,16 @@ app
     .use(passport.session())
 
     .use(cors({
-    origin: 'http://localhost:3001', // where Swagger UI or frontend runs
-    credentials: true,
-    methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
-    allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization'
-}))
+        origin: 'http://localhost:3001', // Swagger UI runs here, not 3001!
+        credentials: true,
+        methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+        allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+    }))
     .use('/', require('./routes/index.js'))
     .use('/movies', require('./routes/movies'))
-    .use('/directors', require('./routes/directors'));
+    .use('/directors', require('./routes/directors'))
+
+    .use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
     passport.use(new GitHubStrategy({
         clientID: process.env.GITHUB_CLIENT_ID,
@@ -62,8 +67,6 @@ app.get('/', (req, res) => {
     return res.send('Logged Out');
   }
 });
-
-
 
 app.get('/github/callback', passport.authenticate('github', {
     failureRedirect: '/api-docs'

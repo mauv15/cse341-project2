@@ -16,7 +16,7 @@
     "type": "apiKey",
     "in": "cookie",
     "name": "connect.sid"
-  }
+    }
   },
   "paths": {
     "/movies/": {
