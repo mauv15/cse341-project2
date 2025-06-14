@@ -30,7 +30,7 @@ app
     .use(passport.session())
 
     .use(cors({
-        origin: 'https://localhost:3001', // Swagger UI runs here, not 3001!
+        origin: 'https://cse341-project2-jxd1.onrender.com', // Swagger UI runs here, not 3001!
         credentials: true,
         methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
         allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
